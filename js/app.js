@@ -1,20 +1,46 @@
+//Funções Utilitárias
+function numeroAleatorio (max, min) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+//Criando uma superclasse para os Personagens e suas propriedades em comum
+var Personagens = function(x,y){
+    this.sprite = "";
+    this.x = x;
+    this.y = y;
+}
+
+// Desenha todos os Personagens (Enemy e Player) na tela
+Personagens.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
+};
+
+//Definindo metódo de uptade padrão
+Personagens.prototype.update = function () {
+};
+
 // Enemies our player must avoid
-var Enemy = function(x, y, speed) {
+var Enemy = function (x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+
+    Personagens.call(this);
     this.speed = speed;
     this.x = x;
     this.y = y;
-
+    this.sprite = 'images/enemy-bug.png';
 };
+
+Enemy.prototype = new Personagens();
+Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -24,81 +50,73 @@ Enemy.prototype.update = function(dt) {
     if (this.x > 6) {
         this.x = -1;
     }
-
 };
-
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
-};
-
-
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-// var Player = function(locX, locY)
-var Player = function(x, y) {
+var Player = function (x, y) {
+    Personagens.call(this);
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
 };
 
-Player.prototype.update = function(dt) {
-  // this.x
+Player.prototype = new Personagens();
+Player.prototype.constructor = Player;
+
+Player.prototype.handleInput = function (key) {
+    switch (key) {
+        case 'left':
+            if (this.x > 0) {
+                this.x--;
+            }
+            break;
+
+        case 'up':
+            if (this.y > 0) {
+                this.y--;
+            }
+
+            else {
+                ctx.clearRect(0, 0, 500, 600);
+                player.level++;
+                this.y = 5;
+            }
+            break;
+            //if the user pressed the right keyboard button move player right one x value
+        case 'right':
+            if (this.x < 4) {
+                this.x++;
+            }
+            break;
+            //if the user pressed the down keyboard button move player down one y value
+        case 'down':
+            if (this.y < 5) {
+                this.y++;
+            }
+            break;
+            //used to select a player
+    }
 };
 
-Player.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
-};
-
-Player.prototype.handleInput = function() {
-    this.location = location;
-};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+  var allEnemies = [];
+  for (var i = 1; i < 4; ++i) {
+      var enemy = new Enemy(1, i, numeroAleatorio(5,1));
+      console.log(i)
+      allEnemies.push(enemy);
+      console.log(enemy)
+  }
 
-
-
-
-
-var numeroAleatorio = function() {
-    var max = 10;
-    var min = 1;
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
-// var gerarInstancias = function(classe, nomeArray){
-//   for (i = 0; i < numeroAleatorio(); i++ ){
-//     // var i = new Player();
-//       var i = new classe()
-//       var  nomeArray = []
-//       nomeArray.push(i)
-//   }
-// }
-// gerarInstancias(Enemy, banana);
-
-
-
-
-var allEnemies = [];
-
-for (var i = 1; i < 4; ++i)
-{
-  var enemy = new Enemy(1,i,i);
-  console.log(i)
-  allEnemies.push(enemy);
-}
-
-// var player = new Player(90, 90);
-var player = new Player(4, 5);
+  var player = new Player(2, 5);
 
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -107,4 +125,5 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+
 });
