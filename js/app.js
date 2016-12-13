@@ -1,27 +1,33 @@
 //Funções Utilitárias
-function numeroAleatorio (max, min) {
+function numeroAleatorio(max, min) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 
 //Criando uma superclasse para os Personagens e suas propriedades em comum
-var Personagens = function(x,y){
+var Personagens = function(x, y) {
     this.sprite = "";
     this.x = x;
     this.y = y;
+    this.vidas = 3;
+    this.nivel = 1;
 }
 
 // Desenha todos os Personagens (Enemy e Player) na tela
-Personagens.prototype.render = function () {
+Personagens.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
+    ctx.font = "20px Trebuchet MS";
+    ctx.fillStyle = "white"
+    ctx.fillText("Vidas: " + player.vidas, 420, 100);
+    ctx.fillStyle = "yellow"
+    ctx.fillText("Nível: " + player.nivel, 10, 100);
 };
 
 //Definindo metódo de uptade padrão
-Personagens.prototype.update = function () {
-};
+Personagens.prototype.update = function() {};
 
 // Enemies our player must avoid
-var Enemy = function (x, y, speed) {
+var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -40,7 +46,7 @@ Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function (dt) {
+Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -55,17 +61,19 @@ Enemy.prototype.update = function (dt) {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function (x, y) {
+var Player = function(x, y, vidas, nivel) {
     Personagens.call(this);
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
+    this.nivel = nivel;
+    this.vidas = vidas;
 };
 
 Player.prototype = new Personagens();
 Player.prototype.constructor = Player;
 
-Player.prototype.handleInput = function (key) {
+Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'left':
             if (this.x > 0) {
@@ -76,12 +84,14 @@ Player.prototype.handleInput = function (key) {
         case 'up':
             if (this.y > 0) {
                 this.y--;
-            }
-
-            else {
+            } else {
                 ctx.clearRect(0, 0, 500, 600);
-                player.level++;
+                this.nivel++;
                 this.y = 5;
+
+                allEnemies.forEach(function(enemy) {
+                    enemy.speed += 1;
+                });
             }
             break;
             //if the user pressed the right keyboard button move player right one x value
@@ -103,20 +113,20 @@ Player.prototype.handleInput = function (key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-  var allEnemies = [];
-  for (var i = 1; i < 4; ++i) {
-      var enemy = new Enemy(1, i, numeroAleatorio(5,1));
-      console.log(i)
-      allEnemies.push(enemy);
-      console.log(enemy)
-  }
+var allEnemies = [];
+for (var i = 1; i < 4; ++i) {
+    var enemy = new Enemy(1, i, numeroAleatorio(5, 1));
+    console.log(i)
+    allEnemies.push(enemy);
+    console.log(enemy)
+}
 
-  var player = new Player(2, 5);
+var player = new Player(2, 5, 3, 1);
 
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function (e) {
+document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',

@@ -84,12 +84,23 @@ var Engine = (function(global) {
     }
 
     function checkCollisions() {
-      allEnemies.forEach(function(enemy){
-        if((Math.round(enemy.x) === player.x ) && (enemy.y === player.y)){
-          player.x = 2;
-          player.y = 5;
-        }
-      });
+        allEnemies.forEach(function(enemy) {
+            if ((Math.round(enemy.x) === player.x) && (enemy.y === player.y)) {
+                player.x = 2;
+                player.y = 5;
+                if (player.vidas > 0) {
+                    player.vidas--;
+                }
+
+                if (player.nivel > 1) {
+                    player.nivel--;
+                }
+
+                if (enemy.speed > 1){
+                  enemy.speed -= 1;
+                }
+            }
+        });
     }
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
