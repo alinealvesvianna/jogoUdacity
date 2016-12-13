@@ -13,12 +13,12 @@ var Personagens = function(x, y) {
     this.nivel = 1;
 }
 
-// Desenha todos os Personagens (Enemy e Player) na tela
+// Desenha todos os Personagens (Enemy, Player e Vidas ) na tela
 Personagens.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
     ctx.font = "20px Trebuchet MS";
     ctx.fillStyle = "white"
-    ctx.fillText("Vidas: " + player.vidas, 420, 100);
+    ctx.fillText("Vidas: " + player.vidas, 410, 100);
     ctx.fillStyle = "yellow"
     ctx.fillText("Nível: " + player.nivel, 10, 100);
 };
@@ -84,12 +84,12 @@ Player.prototype.handleInput = function(key) {
         case 'up':
             if (this.y > 0) {
                 this.y--;
-            } else {
+            } else { // se o jogador conseguir atravessar o outro lado, ele volta para a posição inicial
                 ctx.clearRect(0, 0, 500, 600);
                 this.nivel++;
                 this.y = 5;
 
-                allEnemies.forEach(function(enemy) {
+                allEnemies.forEach(function(enemy) { // aumenta a velocidade do inimigo
                     enemy.speed += 1;
                 });
             }
@@ -110,19 +110,53 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
+// Classe para instanciar vidas ao jogador
+var Vida = function(x,y, speed){
+  Personagens.call(this);
+  this.speed = speed;
+  this.x = x;
+  this.y = y;
+  this.sprite = "images/Heart.png";
+}
+
+Vida.prototype = new Personagens();
+Vida.prototype.constructor = Vida;
+
+Vida.prototype.update = function(dt){
+  this.x += this.speed * dt;
+  if (this.x > 30) {
+      this.x = -1;
+  }
+
+  if(this.y < 1){
+    this.y = numeroAleatorio(3,1);
+  }
+}
+
+Vida.prototype.render = function(){
+  ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
 for (var i = 1; i < 4; ++i) {
     var enemy = new Enemy(1, i, numeroAleatorio(5, 1));
-    console.log(i)
+    // console.log(i)
     allEnemies.push(enemy);
-    console.log(enemy)
+    // console.log(enemy)
 }
 
 var player = new Player(2, 5, 3, 1);
 
+var premiacaoVidas = [];
+for (var i = 0; i < 2; i++ ){
+  var vida = new Vida(1, numeroAleatorio(3,1), numeroAleatorio(10,5))
+  console.log(i);
+  premiacaoVidas.push(vida);
+  console.log(vida);
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

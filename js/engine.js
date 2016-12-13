@@ -88,8 +88,12 @@ var Engine = (function(global) {
             if ((Math.round(enemy.x) === player.x) && (enemy.y === player.y)) {
                 player.x = 2;
                 player.y = 5;
-                if (player.vidas > 0) {
+                // if (player.vidas > 0) {
                     player.vidas--;
+                // }
+
+                if(player.vidas < 0){
+                  player.reset();
                 }
 
                 if (player.nivel > 1) {
@@ -99,6 +103,14 @@ var Engine = (function(global) {
                 if (enemy.speed > 1){
                   enemy.speed -= 1;
                 }
+            }
+        });
+
+        premiacaoVidas.forEach(function(vida) {
+          if ((Math.round(vida.x) === player.x) && (vida.y === player.y)) {
+              player.vidas++;
+              vida.x = numeroAleatorio(-40, -10)
+              console.log("ganhei uma vida!!")
             }
         });
     }
@@ -113,7 +125,12 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+
         player.update();
+
+        premiacaoVidas.forEach(function(vida){
+          vida.update(dt);
+        });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -171,6 +188,10 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        premiacaoVidas.forEach(function(vida){
+          vida.render();
+        });
     }
 
     /* This function does nothing but it could have been a good place to
@@ -179,6 +200,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        console.log("game over!!!!")
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -190,7 +212,9 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Heart.png'
+
     ]);
     Resources.onReady(init);
 
