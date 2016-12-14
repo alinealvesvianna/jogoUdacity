@@ -1,3 +1,5 @@
+var morreu = false;
+
 //Funções Utilitárias
 function numeroAleatorio(max, min) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -18,9 +20,13 @@ Personagens.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
     ctx.font = "20px Trebuchet MS";
     ctx.fillStyle = "white"
-    ctx.fillText("Vidas: " + player.vidas, 410, 100);
+        // ctx.fillText("Vidas: " + player.vidas, 410, 100);
+    ctx.drawImage(Resources.get("images/Heart.png"), 410, 100);
     ctx.fillStyle = "yellow"
     ctx.fillText("Nível: " + player.nivel, 10, 100);
+    if (morreu === true) {
+        player.morrer();
+    }
 };
 
 //Definindo metódo de uptade padrão
@@ -73,6 +79,27 @@ var Player = function(x, y, vidas, nivel) {
 Player.prototype = new Personagens();
 Player.prototype.constructor = Player;
 
+Player.prototype.morrer = function() {
+    ctx.font = "20px Trebuchet MS";
+    ctx.fillStyle = "black"
+    ctx.fillText("Você Perdeu, seu ruim!!", 50, 200);
+    // ctx.fillStyle = "yellow"
+    // ctx.globalAlpha = 0.2
+    // ctx.fillRect(102, 200, 300, 200);
+    // ctx.globalAlpha = 1.0;
+    ctx.beginPath();
+    ctx.moveTo(20, 10);
+    ctx.lineTo(80, 10);
+    ctx.quadraticCurveTo(90, 10, 90, 20);
+    ctx.lineTo(90, 80);
+    ctx.quadraticCurveTo(90, 90, 80, 90);
+    ctx.lineTo(20, 90);
+    ctx.quadraticCurveTo(10, 90, 10, 80);
+    ctx.lineTo(10, 20);
+    ctx.quadraticCurveTo(10, 10, 20, 10);
+    ctx.fill();
+};
+
 Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'left':
@@ -111,30 +138,30 @@ Player.prototype.handleInput = function(key) {
 };
 
 // Classe para instanciar vidas ao jogador
-var Vida = function(x,y, speed){
-  Personagens.call(this);
-  this.speed = speed;
-  this.x = x;
-  this.y = y;
-  this.sprite = "images/Heart.png";
+var Vida = function(x, y, speed) {
+    Personagens.call(this);
+    this.speed = speed;
+    this.x = x;
+    this.y = y;
+    this.sprite = "images/Heart.png";
 }
 
 Vida.prototype = new Personagens();
 Vida.prototype.constructor = Vida;
 
-Vida.prototype.update = function(dt){
-  this.x += this.speed * dt;
-  if (this.x > 30) {
-      this.x = -1;
-  }
+Vida.prototype.update = function(dt) {
+    this.x += this.speed * dt;
+    if (this.x > 30) {
+        this.x = -1;
+    }
 
-  if(this.y < 1){
-    this.y = numeroAleatorio(3,1);
-  }
+    if (this.y < 1) {
+        this.y = numeroAleatorio(3, 1);
+    }
 }
 
-Vida.prototype.render = function(){
-  ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+Vida.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
 }
 
 // Now instantiate your objects.
@@ -151,11 +178,11 @@ for (var i = 1; i < 4; ++i) {
 var player = new Player(2, 5, 3, 1);
 
 var premiacaoVidas = [];
-for (var i = 0; i < 2; i++ ){
-  var vida = new Vida(1, numeroAleatorio(3,1), numeroAleatorio(10,5))
-  console.log(i);
-  premiacaoVidas.push(vida);
-  console.log(vida);
+for (var i = 0; i < 2; i++) {
+    var vida = new Vida(1, numeroAleatorio(3, 1), numeroAleatorio(10, 5))
+    console.log(i);
+    premiacaoVidas.push(vida);
+    console.log(vida);
 }
 
 // This listens for key presses and sends the keys to your

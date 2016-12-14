@@ -92,8 +92,9 @@ var Engine = (function(global) {
                     player.vidas--;
                 // }
 
-                if(player.vidas < 0){
-                  player.reset();
+                if(player.vidas  === 0){
+                  morreu = true;
+                  // player.morreu();
                 }
 
                 if (player.nivel > 1) {
@@ -200,7 +201,11 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
-        console.log("game over!!!!")
+        // ctx.font = "20px Trebuchet MS";
+        // ctx.fillStyle = "black"
+        // ctx.rect(102,200,300,200);
+        // ctx.fill();
+        // ctx.fillText("Você Perdeu, seu ruim!!", 50, 200);
     }
 
     /* Go ahead and load all of the images we know we're going to need to
