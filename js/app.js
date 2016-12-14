@@ -6,13 +6,39 @@ function numeroAleatorio(max, min) {
 }
 
 
+function desenharRetangulo(x, y, w, h, texto, transparencia) {
+//seta parâmetros do retângulo
+  var ParametrosRetangulo = {
+    rentanguloStrokeStyle : "black",
+    rentanguloLineWidth : 6,
+    familiaFonte : "12 px Arial",
+    corFonte : "white",
+  }
+  // draw rectangular
+ctx.strokeStyle = ParametrosRetangulo.rentanguloStrokeStyle;
+ctx.lineWidth = ParametrosRetangulo.rentanguloLineWidth;
+ctx.globalAlpha = transparencia;
+ctx.fillRect(x, y, w, h);
+ctx.strokeRect(x - ParametrosRetangulo.rentanguloLineWidth / 2, y - ParametrosRetangulo.rentanguloLineWidth / 2 , w + ParametrosRetangulo.rentanguloLineWidth, h + ParametrosRetangulo.rentanguloLineWidth);
+ctx.globalAlpha = 1.0;
+// draw text (this.val)
+ctx.textBaseline = "middle";
+ctx.font = ParametrosRetangulo.familiaFonte;
+ctx.fillStyle = ParametrosRetangulo.corFonte;
+// ctx2d.measureText(text).width/2
+// returns the text width (given the supplied font) / 2
+textX = x+w/2-ctx.measureText(texto).width/2;
+textY = y+h/2;
+ctx.fillText(texto, textX, textY);
+}
+
 //Criando uma superclasse para os Personagens e suas propriedades em comum
-var Personagens = function(x, y) {
-    this.sprite = "";
+var Personagens = function(x, y, vidas, nivel) {
+    this.sprite = "sprite";
     this.x = x;
     this.y = y;
-    this.vidas = 3;
-    this.nivel = 1;
+    this.vidas = vidas;
+    this.nivel = nivel;
 }
 
 // Desenha todos os Personagens (Enemy, Player e Vidas ) na tela
@@ -20,10 +46,27 @@ Personagens.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
     ctx.font = "20px Trebuchet MS";
     ctx.fillStyle = "white"
-        // ctx.fillText("Vidas: " + player.vidas, 410, 100);
-    ctx.drawImage(Resources.get("images/Heart.png"), 410, 100);
+
+
+  if (player.vidas <= 3)      {
+    for(var i = 0; i < player.vidas; ++i ){
+      var posicaoCoracao = 30 * i ;
+      ctx.drawImage(Resources.get("images/Heart.png"), 405 + posicaoCoracao, 50, 30, 50);
+    }
+  }
+
+  if (player.vidas === 4){
+    for(var i = 0; i < player.vidas; ++i ){
+      var posicaoCoracao = 30 * i ;
+      ctx.drawImage(Resources.get("images/Heart.png"), 370 + posicaoCoracao, 50, 30, 50);
+    }
+  }
+
+if(player.vidas > 4){
+   ctx.fillText(player.vidas + " Vidas", 420, 90);
+}
     ctx.fillStyle = "yellow"
-    ctx.fillText("Nível: " + player.nivel, 10, 100);
+        ctx.fillText(player.nivel + "°" +  " Nível", 10, 90);
     if (morreu === true) {
         player.morrer();
     }
@@ -72,32 +115,28 @@ var Player = function(x, y, vidas, nivel) {
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
-    this.nivel = nivel;
-    this.vidas = vidas;
-};
+    this.nivel = 1;
+    this.vidas = 3;
+  };
 
 Player.prototype = new Personagens();
 Player.prototype.constructor = Player;
 
 Player.prototype.morrer = function() {
-    ctx.font = "20px Trebuchet MS";
-    ctx.fillStyle = "black"
-    ctx.fillText("Você Perdeu, seu ruim!!", 50, 200);
-    // ctx.fillStyle = "yellow"
-    // ctx.globalAlpha = 0.2
+    // ctx.font = "20px Trebuchet MS";
+    // ctx.fillStyle = "black"
+    // ctx.fillText("Você Perdeu, seu ruim!!", 100, 200);
+    //
+    // ctx.fillStyle = "yellow";
+    // ctx.globalAlpha = 0.2;
+    // ctx.lineWidth = 6;
+    // ctx.strokeStyle = "black"
     // ctx.fillRect(102, 200, 300, 200);
+    // ctx.strokeRect(99, 197, 306, 206);
     // ctx.globalAlpha = 1.0;
-    ctx.beginPath();
-    ctx.moveTo(20, 10);
-    ctx.lineTo(80, 10);
-    ctx.quadraticCurveTo(90, 10, 90, 20);
-    ctx.lineTo(90, 80);
-    ctx.quadraticCurveTo(90, 90, 80, 90);
-    ctx.lineTo(20, 90);
-    ctx.quadraticCurveTo(10, 90, 10, 80);
-    ctx.lineTo(10, 20);
-    ctx.quadraticCurveTo(10, 10, 20, 10);
-    ctx.fill();
+
+
+    desenharRetangulo(102, 200, 300, 200, "Você Perdeu, seu ruim!!", 0.2)
 };
 
 Player.prototype.handleInput = function(key) {
