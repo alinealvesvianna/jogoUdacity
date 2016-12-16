@@ -5,6 +5,7 @@ function numeroAleatorio(max, min) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
 function desenharRetangulo(x, y, w, h, texto, transparencia) {
     //seta parâmetros do retângulo
     var ParametrosRetangulo = {
@@ -74,13 +75,43 @@ Personagens.prototype.render = function() {
     ctx.fillText(player.nivel + "°" + " Nível", 10, 90);
 
     if (morreu === true) {
-        player.morrer();
-
+      player.x=2;
+      player.y=5;
+      desenharRetangulo(102, 150, 300, 100, "Você Perdeu, seu ruim!!", 0.2);
+      desenharRetangulo(102, 300, 300, 50, "Pressione enter para começar novamente", 0.2);
     }
+
 };
 
 //Definindo metódo de uptade padrão
 Personagens.prototype.update = function() {};
+
+Personagens.prototype.selecionarPlayer = function (sprite){
+  var players = [
+    {
+      imagemJogador : "images/char-boy.png"
+    },
+    {
+      imagemJogador : "images/char-cat-girl.png",
+    },
+    {
+      imagemJogador : "images/char-horn-girl.png",
+    },
+    {
+      imagemJogador : "images/char-pink-girl.png",
+    },
+    {
+      imagemJogador : "images/char-princess-girl.png"
+    }
+  ]
+
+players.forEach(function(player){
+  var posicaoJogador = 30 * i;
+  ctx.drawImage(Resources.get(player.imagemJogador), 100 + posicaoJogador, 50, 30, 50);
+});
+
+
+};
 
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
@@ -128,7 +159,7 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.morrer = function() {
     // allEnemies.forEach(function(enemy) {
         enemy.speed = numeroAleatorio(5, 1);
-    // })
+        enemy.x = 1;
 };
 
 // Now write your own player class
@@ -150,13 +181,10 @@ Player.prototype.constructor = Player;
 Player.prototype.morrer = function() {
 
     // function desenharRetangulo(x, y, w, h, texto, transparencia)
-
-    desenharRetangulo(102, 150, 300, 100, "Você Perdeu, seu ruim!!", 0.2);
-
-    desenharRetangulo(102, 300, 300, 50, "Pressione enter para começar novamente", 0.2);
-
     player.x = 2;
     player.y = 5;
+    player.vidas = 3;
+    player.nivel = 1;
 
 };
 
@@ -198,14 +226,13 @@ Player.prototype.handleInput = function(key) {
         case "enter":
             if (morreu === true) {
                 console.log("morri porra!")
-                player.x = 2;
-                player.y = 5;
-                player.vidas = 3;
-                player.nivel = 1;
+                player.morrer()
                 allEnemies.forEach(function(enemy) {
                     enemy.morrer()
                 })
-
+                premiacaoVidas.forEach(function(vida){
+                  vida.morrer();
+                })
                 morreu = false;
             }
             break;
@@ -242,6 +269,11 @@ Vida.prototype.update = function(dt) {
 
 Vida.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+}
+
+Vida.prototype.morrer = function(){
+  vida.y = numeroAleatorio(3, 1);
+  vida.speed = numeroAleatorio(10, 5);
 }
 
 // Now instantiate your objects.
