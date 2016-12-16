@@ -75,8 +75,7 @@ Personagens.prototype.render = function() {
 
     if (morreu === true) {
         player.morrer();
-        player.x = 2;
-        player.y = 5;
+
     }
 };
 
@@ -126,6 +125,12 @@ Enemy.prototype.update = function(dt) {
     }
 };
 
+Enemy.prototype.morrer = function() {
+    // allEnemies.forEach(function(enemy) {
+        enemy.speed = numeroAleatorio(5, 1);
+    // })
+};
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -150,8 +155,8 @@ Player.prototype.morrer = function() {
 
     desenharRetangulo(102, 300, 300, 50, "Pressione enter para começar novamente", 0.2);
 
-    // this.x = 2;
-    // this.y = 5;
+    player.x = 2;
+    player.y = 5;
 
 };
 
@@ -197,6 +202,10 @@ Player.prototype.handleInput = function(key) {
                 player.y = 5;
                 player.vidas = 3;
                 player.nivel = 1;
+                allEnemies.forEach(function(enemy) {
+                    enemy.morrer()
+                })
+
                 morreu = false;
             }
             break;
