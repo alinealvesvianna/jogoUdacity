@@ -75,6 +75,8 @@ Personagens.prototype.render = function() {
 
     if (morreu === true) {
         player.morrer();
+        player.x = 2;
+        player.y = 5;
     }
 };
 
@@ -146,7 +148,7 @@ Player.prototype.morrer = function() {
 
     desenharRetangulo(102, 150, 300, 100, "Você Perdeu, seu ruim!!", 0.2);
 
-    desenharRetangulo(102, 300, 300, 50, "Pressione qualquer tecla para começar novamente", 0.2);
+    desenharRetangulo(102, 300, 300, 50, "Pressione enter para começar novamente", 0.2);
 
     // this.x = 2;
     // this.y = 5;
@@ -155,40 +157,50 @@ Player.prototype.morrer = function() {
 
 Player.prototype.handleInput = function(key) {
     // if (morreu === false) {
-        switch (key) {
-            case 'left':
-                if (this.x > 0) {
-                    this.x--;
-                }
-                break;
+    switch (key) {
+        case 'left':
+            if (this.x > 0) {
+                this.x--;
+            }
+            break;
 
-            case 'up':
-                if (this.y > 0) {
-                    this.y--;
-                } else { // se o jogador conseguir atravessar o outro lado, ele volta para a posição inicial
-                    ctx.clearRect(0, 0, 500, 600);
-                    this.nivel++;
-                    this.y = 5;
+        case 'up':
+            if (this.y > 0) {
+                this.y--;
+            } else { // se o jogador conseguir atravessar o outro lado, ele volta para a posição inicial
+                ctx.clearRect(0, 0, 500, 600);
+                this.nivel++;
+                this.y = 5;
 
-                    allEnemies.forEach(function(enemy) { // aumenta a velocidade do inimigo
-                        enemy.speed += 1;
-                    });
-                }
-                break;
-                //if the user pressed the right keyboard button move player right one x value
-            case 'right':
-                if (this.x < 4) {
-                    this.x++;
-                }
-                break;
-                //if the user pressed the down keyboard button move player down one y value
-            case 'down':
-                if (this.y < 5) {
-                    this.y++;
-                }
-                break;
-                //used to select a player
-        }
+                allEnemies.forEach(function(enemy) { // aumenta a velocidade do inimigo
+                    enemy.speed += 1;
+                });
+            }
+            break;
+            //if the user pressed the right keyboard button move player right one x value
+        case 'right':
+            if (this.x < 4) {
+                this.x++;
+            }
+            break;
+            //if the user pressed the down keyboard button move player down one y value
+        case 'down':
+            if (this.y < 5) {
+                this.y++;
+            }
+            break;
+            //used to select a player
+        case "enter":
+            if (morreu === true) {
+                console.log("morri porra!")
+                player.x = 2;
+                player.y = 5;
+                player.vidas = 3;
+                player.nivel = 1;
+                morreu = false;
+            }
+            break;
+    }
 
     // } else {
     //     reset();
@@ -251,7 +263,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        13: "enter"
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
