@@ -85,20 +85,18 @@ var Engine = (function(global) {
 
     function checkCollisions() {
         allEnemies.forEach(function(enemy) {
-            if ((Math.round(enemy.x) === player.x) && (enemy.y === player.y)) {
-                player.x = 2;
-                player.y = 5;
-                // if (player.vidas > 0) {
-                    player.vidas--;
-                // }
+            if ((Math.round(enemy.x) === playerEscolhido.x) && (enemy.y === playerEscolhido.y)) {
+                playerEscolhido.x = 2;
+                playerEscolhido.y = 5;
+                playerEscolhido.vidas--;
 
-                if(player.vidas  === 0){
+
+                if(playerEscolhido.vidas  === 0){
                   morreu = true;
-                  // player.morreu();
                 }
 
-                if (player.nivel > 1) {
-                    player.nivel--;
+                if (playerEscolhido.nivel > 1) {
+                    playerEscolhido.nivel--;
                 }
 
                 if (enemy.speed > 1){
@@ -108,8 +106,8 @@ var Engine = (function(global) {
         });
 
         premiacaoVidas.forEach(function(vida) {
-          if ((Math.round(vida.x) === player.x) && (vida.y === player.y)) {
-              player.vidas++;
+          if ((Math.round(vida.x) === playerEscolhido.x) && (vida.y === playerEscolhido.y)) {
+              playerEscolhido.vidas++;
               vida.x = numeroAleatorio(-40, -10)
               console.log("ganhei uma vida!!")
             }
@@ -127,7 +125,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
 
-        player.update();
+        playerEscolhido.update();
 
         premiacaoVidas.forEach(function(vida){
           vida.update(dt);
@@ -188,7 +186,9 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        player.render();
+        if(inicioJogo === false){
+          playerEscolhido.render();
+        }
 
         premiacaoVidas.forEach(function(vida){
           vida.render();
@@ -201,11 +201,6 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
-        // ctx.font = "20px Trebuchet MS";
-        // ctx.fillStyle = "black"
-        // ctx.rect(102,200,300,200);
-        // ctx.fill();
-        // ctx.fillText("Você Perdeu, seu ruim!!", 50, 200);
     }
 
     /* Go ahead and load all of the images we know we're going to need to
