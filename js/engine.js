@@ -201,6 +201,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        //TODO: Conseguir reiniciar o jogo, limpado e escrevendo as imagens novamente na tela.
     }
 
     /* Go ahead and load all of the images we know we're going to need to

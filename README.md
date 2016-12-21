@@ -1,6 +1,12 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+Instruções para o jogo
+----------------------
+1. Escolha o personagem de sua preferência, e **pressione a tecla Enter** do teclado para iniciar
+o jogo.
+2. Desvie das joaninhas e pegue os corações para ganhar vidas usando as **teclas direcionais do teclado**. Seu objetivo é atravessar a rua sem ser atingido por um inimigo.
+3. Ao chegar no rio, **pressione a tecla direcional para cima** ![seta para cima](http://gravecare.org.ua/wp-content/themes/gravecare/images/sdcrollTop-arrow.png), para voltar a posição inicial do jogador e subir o nível do jogo. A medida que você consegue atravessar sem ser pego pelas joaninhas, mais rápido o jogo fica!
+4. O jogo termina quando você perde todas as vidas. Para iniciar o jogo novamente, **pressione a barra de espaço do teclado**.
