@@ -96,47 +96,28 @@ function numeroAleatorio(max, min) {
  * @param tamanhoFonte {number} - o tamanho da fonte do texto
  *
  */
- function desenharRetangulo(ParametrosRetangulo){
+function desenharRetangulo(ParametrosRetangulo) {
+    var retanguloLineWidth = 6;
 
-     //ctx.strokeStyle = bordaRetangulo;
-     //ctx.fillStyle = corRetangulo;
-     //ctx.font = tamanhoFonte + "px" + " " + "Courier New";
-     //ctx.fillStyle = corFonte;
-//   ParametrosRetangulo = {
-//     x: null,
-//     y: null,
-//     w: null,
-//     h: null,
-//     texto: "",
-//     transparencia: 1,
-//     corRetangulo: "",
-//     bordaRetanguloCor: "",
-//     corFonte: "",
-//     tamanhoFonte: 12,
-//     retanguloLineWidth: 6,
-// }
-
-        var retanguloLineWidth = 6;
-
-     ctx.strokeStyle = ParametrosRetangulo.bordaRetanguloCor;
-     ctx.lineWidth = retanguloLineWidth;
-     ctx.globalAlpha = ParametrosRetangulo.transparencia;
-     ctx.fillStyle = ParametrosRetangulo.corRetangulo;
-     ctx.fillRect(ParametrosRetangulo.x, ParametrosRetangulo.y, ParametrosRetangulo.w, ParametrosRetangulo.h);
-     ctx.strokeRect(
-         ParametrosRetangulo.x -= retanguloLineWidth / 2,
-         ParametrosRetangulo.y -= retanguloLineWidth / 2,
-         ParametrosRetangulo.w += retanguloLineWidth,
-         ParametrosRetangulo.h += retanguloLineWidth
-         );
-     ctx.globalAlpha = 1.0;
-     ctx.textBaseline = "middle";
-     ctx.fillStyle = ParametrosRetangulo.corFonte;
-     ctx.font = ParametrosRetangulo.tamanhoFonte + "px" + " " + "Courier New";
-     textX = ParametrosRetangulo.x + ParametrosRetangulo.w / 2 - ctx.measureText(ParametrosRetangulo.texto).width / 2;
-     textY = ParametrosRetangulo.y + ParametrosRetangulo.h / 2;
-     ctx.fillText(ParametrosRetangulo.texto, textX, textY);
- }
+    ctx.strokeStyle = ParametrosRetangulo.bordaRetanguloCor;
+    ctx.lineWidth = retanguloLineWidth;
+    ctx.globalAlpha = ParametrosRetangulo.transparencia;
+    ctx.fillStyle = ParametrosRetangulo.corRetangulo;
+    ctx.fillRect(ParametrosRetangulo.x, ParametrosRetangulo.y, ParametrosRetangulo.w, ParametrosRetangulo.h);
+    ctx.strokeRect(
+        ParametrosRetangulo.x -= retanguloLineWidth / 2,
+        ParametrosRetangulo.y -= retanguloLineWidth / 2,
+        ParametrosRetangulo.w += retanguloLineWidth,
+        ParametrosRetangulo.h += retanguloLineWidth
+    );
+    ctx.globalAlpha = 1.0;
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = ParametrosRetangulo.corFonte;
+    ctx.font = ParametrosRetangulo.tamanhoFonte + "px" + " " + "Courier New";
+    textX = ParametrosRetangulo.x + ParametrosRetangulo.w / 2 - ctx.measureText(ParametrosRetangulo.texto).width / 2;
+    textY = ParametrosRetangulo.y + ParametrosRetangulo.h / 2;
+    ctx.fillText(ParametrosRetangulo.texto, textX, textY);
+}
 
 
 /**
@@ -218,8 +199,31 @@ Personagens.prototype.render = function() {
         playerEscolhido.x = 2;
         playerEscolhido.y = 5;
 
-        // desenharRetangulo(102, 150, 300, 70, "Você Perdeu, seu ruim!", 0.6, "Tomato", "Salmon", "White", 20);
-        // desenharRetangulo(7, 300, 490, 50, "Pressione a barra de espaço para começar novamente", 0.6, "GoldenRod", "Gold", "White", 16);
+        desenharRetangulo({
+            x: 102,
+            y: 150,
+            w: 300,
+            h: 70,
+            texto: "Você Perdeu, seu ruim!",
+            transparencia: 0.6,
+            corRetangulo: "Tomato",
+            bordaRetanguloCor: "Salmon",
+            corFonte: "White",
+            tamanhoFonte: 20,
+        });
+
+        desenharRetangulo({
+            x: 7,
+            y: 300,
+            w: 490,
+            h: 50,
+            texto: "Pressione a barra de espaço para começar novamente",
+            transparencia: 0.6,
+            corRetangulo: "GoldenRod",
+            bordaRetanguloCor: "Gold",
+            corFonte: "White",
+            tamanhoFonte: 16,
+        })
     }
 
     /**
@@ -252,8 +256,6 @@ Personagens.prototype.selecionarPlayer = function() {
         ctx.drawImage(Resources.get(players[i].sprite), players[i].posicaoJogador, 200, (players[i].largura) * 1.3, 100 * 1.5);
         // console.log(players[i].posicaoJogador);
     }
-    //desenharRetangulo(40, 380, 420, 50, "Escolha um personagem para começar o jogo.", 0.5, "AntiqueWhite", "BurlyWood", "Crimson", 16);
-
 
     desenharRetangulo({
         x: 40,
@@ -266,27 +268,20 @@ Personagens.prototype.selecionarPlayer = function() {
         bordaRetanguloCor: "BurlyWood",
         corFonte: "Crimson",
         tamanhoFonte: 16,
-        // retanguloLineWidth: 6,
     });
 
-
-  //desenharRetangulo(10, 450, 480, 50, "Para selecionar um personagem, pressione Enter.", 0.5, "AntiqueWhite", "BurlyWood", "Crimson", 16);
-  desenharRetangulo({
-    x: 10,
-    y: 450,
-    w: 480,
-    h: 50,
-    texto: "Para selecionar um personagem, pressione Enter.",
-    transparencia: 0.5,
-    corRetangulo: "AntiqueWhite",
-    bordaRetanguloCor: "BurlyWood",
-    corFonte: "Crimson",
-    tamanhoFonte: 16,
-    // retanguloLineWidth: 6,
-})
-
-
-    //desenharRetangulo(deslocamentoRetanguloSelecionarPersonagem, 240, 85, 100, "", 0.3, "Crimson", "DarkRed", "white", 0)
+    desenharRetangulo({
+        x: 10,
+        y: 450,
+        w: 480,
+        h: 50,
+        texto: "Para selecionar um personagem, pressione Enter.",
+        transparencia: 0.5,
+        corRetangulo: "AntiqueWhite",
+        bordaRetanguloCor: "BurlyWood",
+        corFonte: "Crimson",
+        tamanhoFonte: 16,
+    });
 
     desenharRetangulo({
         x: deslocamentoRetanguloSelecionarPersonagem,
@@ -299,10 +294,9 @@ Personagens.prototype.selecionarPlayer = function() {
         bordaRetanguloCor: "DarkRed",
         corFonte: "white",
         tamanhoFonte: 0,
-        // retanguloLineWidth: 6,
-    })
+    });
 
-    };
+};
 
 /**
  * @description: Classe Enemy, herdada da Super Classe Personagens,
