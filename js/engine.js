@@ -91,9 +91,9 @@ var Engine = (function(global) {
                 playerEscolhido.vidas--;
 
 
-                if(playerEscolhido.vidas  === 0){
-                  morreu = true;
-                }
+                // if(playerEscolhido.vidas  === 0){
+                //   morreu = true;
+                // }
 
                 if (playerEscolhido.nivel > 1) {
                     playerEscolhido.nivel--;
@@ -130,6 +130,8 @@ var Engine = (function(global) {
         premiacaoVidas.forEach(function(vida){
           vida.update(dt);
         });
+
+        ambienteJogo.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -186,13 +188,15 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        if(inicioJogo === false){
+        // if(inicioJogo === false){
           playerEscolhido.render();
-        }
+        // }
 
         premiacaoVidas.forEach(function(vida){
           vida.render();
         });
+
+        ambienteJogo.render();
     }
 
     /* This function does nothing but it could have been a good place to
