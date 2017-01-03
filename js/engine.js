@@ -89,14 +89,13 @@ var Engine = (function(global) {
                 playerEscolhido.x = 2;
                 playerEscolhido.y = 5;
                 playerEscolhido.vidas--;
-
-
-                // if(playerEscolhido.vidas  === 0){
-                //   morreu = true;
-                // }
+                ambienteJogo.vidas--;
+                vida.vidas--;
+                enemy.vidas--;
 
                 if (playerEscolhido.nivel > 1) {
                     playerEscolhido.nivel--;
+                    ambienteJogo.nivel--;
                 }
 
                 if (enemy.speed > 1){
@@ -108,6 +107,11 @@ var Engine = (function(global) {
         premiacaoVidas.forEach(function(vida) {
           if ((Math.round(vida.x) === playerEscolhido.x) && (vida.y === playerEscolhido.y)) {
               playerEscolhido.vidas++;
+              ambienteJogo.vidas++;
+              vida.vidas++;
+              enemy.vidas++;
+
+
               vida.x = numeroAleatorio(-40, -10)
               console.log("ganhei uma vida!!")
             }
@@ -188,9 +192,7 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        // if(inicioJogo === false){
           playerEscolhido.render();
-        // }
 
         premiacaoVidas.forEach(function(vida){
           vida.render();

@@ -102,23 +102,22 @@ var Personagens = function (x, y) {
     this.sprite = "sprite";
     this.x = x;
     this.y = y;
-    //this.vidas = vidas;
-    //this.nivel = nivel;
+    this.vidas = 3;
 }
 
 Personagens.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
-};
+
+  if(this.vidas === 0){
+    this.estado.finalJogo = true;
+    this.sprite = "";
+  } else{
+      ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
+    }
+  };
 
 Personagens.prototype.update = function () { };
 
 var Jogo = function (estado, vidas, nivel, deslocamentoRetanguloSelecionarPersonagem) {
-    //this.estado = {
-    //    inicioJogo: true,
-    //    finalJogo: false,
-    //    selecaoJogador: true,
-    //};
-
     this.estado = estado;
     this.vidas = vidas;
     this.nivel = nivel;
@@ -157,9 +156,42 @@ Jogo.prototype.render = function () {
         this.selecionarPlayer();
     }
 
+    if(this.vidas === 0){
+      this.estado.finalJogo = true,
+      this.morrer();
+    }
+
 }
 
-Jogo.prototype.selecionarPlayer = function (estado) {
+Jogo.prototype.morrer = function () {
+       desenharRetangulo({
+           x: 102,
+           y: 150,
+           w: 300,
+           h: 70,
+           texto: "Você Perdeu, seu ruim!",
+           transparencia: 0.6,
+           corRetangulo: "Tomato",
+           bordaRetanguloCor: "Salmon",
+           corFonte: "White",
+           tamanhoFonte: 20,
+       });
+
+       desenharRetangulo({
+           x: 7,
+           y: 300,
+           w: 490,
+           h: 50,
+           texto: "Pressione a barra de espaço para começar novamente",
+           transparencia: 0.6,
+           corRetangulo: "GoldenRod",
+           bordaRetanguloCor: "Gold",
+           corFonte: "White",
+           tamanhoFonte: 16,
+       })
+}
+
+Jogo.prototype.selecionarPlayer = function () {
 
   desenharRetangulo({
         x: 40,
@@ -203,12 +235,12 @@ Jogo.prototype.selecionarPlayer = function (estado) {
 }
 
 Jogo.prototype.handleInput = function (key) {
-
+    var objetoJogo = this;
     switch (key) {
 
         case "left":
 
-            if (this.deslocamentoRetanguloSelecionarPersonagem > 6) {
+            if (this.deslocamentoRetanguloSelecionarPersonagem > 6 && this.estado.inicioJogo ===  true) {
                 deslocamentoRetanguloInicial--;
                 this.deslocamentoRetanguloSelecionarPersonagem = (deslocarRetangulo * deslocamentoRetanguloInicial) + 6;
                 console.log(this.deslocamentoRetanguloSelecionarPersonagem)
@@ -218,7 +250,7 @@ Jogo.prototype.handleInput = function (key) {
 
         case "right":
 
-            if (this.deslocamentoRetanguloSelecionarPersonagem < 400) {
+            if (this.deslocamentoRetanguloSelecionarPersonagem < 400 && this.estado.inicioJogo ===  true) {
                 deslocamentoRetanguloInicial++;
                 this.deslocamentoRetanguloSelecionarPersonagem = (deslocarRetangulo * deslocamentoRetanguloInicial) + 6;
                 console.log(this.deslocamentoRetanguloSelecionarPersonagem)
@@ -227,18 +259,24 @@ Jogo.prototype.handleInput = function (key) {
             break;
 
         case "enter":
-
            if (this.estado.inicioJogo ===  true) {
                players.forEach(function (player) {
-                 //TODO: Como chamar a instância da classe Jogo, sem marretar o objeto criado?
-                   if (ambienteJogo.deslocamentoRetanguloSelecionarPersonagem === player.posicaoJogador) {
+                   if (objetoJogo.deslocamentoRetanguloSelecionarPersonagem === player.posicaoJogador) {
                        sprite = player.sprite;
-                       playerEscolhido.sprite = sprite;
                    }
                });
                this.estado.inicioJogo = false
            }
            break;
+
+     case "spacebar":
+         if (this.estado.finalJogo === true) {
+             this.vidas = 3;
+             this.nivel = 1;
+             this.estado.inicioJogo = true;
+             this.estado.finalJogo = false;
+         }
+     break;
     }
 };
 
@@ -248,23 +286,19 @@ var Enemy = function (x, y, speed) {
     this.x = x;
     this.y = y;
     this.sprite = "images/enemy-bug.png";
+    this.estado = {
+      finalJogo: false,
+    }
 };
 
 Enemy.prototype = new Personagens();
 Enemy.prototype.constructor = Enemy;
-
-
 
 Enemy.prototype.update = function (dt) {
     this.x += this.speed * dt;
     if (this.x > 6) {
         this.x = -1;
     }
-};
-
-Enemy.prototype.morrer = function () {
-    enemy.speed = numeroAleatorio(5, 1);
-    enemy.x = 1;
 };
 
 var Player = function (x, y, vidas, nivel) {
@@ -274,6 +308,11 @@ var Player = function (x, y, vidas, nivel) {
     this.y = y;
     this.vidas = vidas;
     this.nivel = nivel;
+    this.estado = {
+      inicioJogo: true,
+      finalJogo: false,
+      // selecaoJogador: true,
+    }
 };
 
 Player.prototype = new Personagens();
@@ -281,20 +320,20 @@ Player.prototype.constructor = Player;
 
 
 Player.prototype.render = function () {
-  if(ambienteJogo.estado.inicioJogo === true){
+  if(this.estado.inicioJogo === true){
       this.selecionarPlayer();
   }
+
+  else if(this.vidas === 0){
+    this.estado.finalJogo = true;
+    this.sprite = "";
+  }
+
   else{
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
   }
 };
 
-Player.prototype.morrer = function () {
-    this.x = 2;
-    this.y = 5;
-    this.vidas = 3;
-    this.nivel = 1;
-};
 
 Player.prototype.selecionarPlayer = function () {
     for (var i = 0; i < players.length; ++i) {
@@ -305,9 +344,10 @@ Player.prototype.selecionarPlayer = function () {
 };
 
 Player.prototype.handleInput = function (key) {
+
     switch (key) {
         case "left":
-            if (this.x > 0) {
+            if (this.x > 0 && this.estado.inicioJogo === false) {
                 this.x--;
             }
             break;
@@ -325,15 +365,15 @@ Player.prototype.handleInput = function (key) {
                 allEnemies.forEach(function (enemy) {
                     enemy.speed += 1;
                 });
+                ambienteJogo.nivel++;
             }
             break;
 
         case "right":
 
-            if (this.x < 4) {
+            if (this.x < 4 && this.estado.inicioJogo === false) {
                 this.x++;
             }
-
 
             break;
 
@@ -343,20 +383,21 @@ Player.prototype.handleInput = function (key) {
             }
             break;
 
+        case "enter":
+          if(this.estado.inicioJogo ===  true){
+              this.sprite = sprite;
+              this.estado.inicioJogo = false
+          }
+          break;
 
-        // case "spacebar":
-        //     if (morreu === true) {
-        //         playerEscolhido.morrer()
-        //         allEnemies.forEach(function (enemy) {
-        //             enemy.morrer()
-        //         })
-        //         premiacaoVidas.forEach(function (vida) {
-        //             vida.morrer();
-        //         })
-        //         inicioJogo = true;
-        //         morreu = false;
-        //     }
-        //     break;
+          case "spacebar":
+              if (this.estado.finalJogo === true) {
+                  this.vidas = 3;
+                  this.nivel = 1;
+                  this.estado.inicioJogo = true;
+                  this.estado.finalJogo = false;
+              }
+          break;
     }
 
 };
@@ -368,6 +409,9 @@ var Vida = function (x, y, speed) {
     this.x = x;
     this.y = y;
     this.sprite = "images/Heart.png";
+    this.estado = {
+      finalJogo: false,
+    }
 }
 
 Vida.prototype = new Personagens();
@@ -386,13 +430,19 @@ Vida.prototype.update = function (dt) {
 }
 
 Vida.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+    if(this.vidas === 0){
+      this.estado.finalJogo = true;
+      this.sprite = "";
+    }
+    else{
+      ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+    }
 }
 
-Vida.prototype.morrer = function () {
-    vida.y = numeroAleatorio(3, 1);
-    vida.speed = numeroAleatorio(10, 5);
-}
+// Vida.prototype.morrer = function () {
+//     vida.y = numeroAleatorio(3, 1);
+//     vida.speed = numeroAleatorio(10, 5);
+// }
 
 
 var allEnemies = [];
@@ -410,12 +460,10 @@ for (var i = 0; i < 2; i++) {
 }
 
 
-//var Jogo = function (estado, vidas)
-
 var ambienteJogo = new Jogo({
     inicioJogo: true,
     finalJogo: false,
-    selecaoJogador: true,
+    // selecaoJogador: true,
 }, 3, 1, 6)
 
 document.addEventListener("keyup", function (e) {
@@ -428,10 +476,6 @@ document.addEventListener("keyup", function (e) {
         32: "spacebar"
     };
 
-  if (ambienteJogo.estado.inicioJogo === true) {
     ambienteJogo.handleInput(allowedKeys[e.keyCode]);
-  }
-  else{
     playerEscolhido.handleInput(allowedKeys[e.keyCode]);
-  }
 });
