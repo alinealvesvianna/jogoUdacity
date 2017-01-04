@@ -72,7 +72,6 @@ function numeroAleatorio(max, min) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
 function desenharRetangulo(ParametrosRetangulo) {
     var retanguloLineWidth = 6;
 
@@ -96,24 +95,15 @@ function desenharRetangulo(ParametrosRetangulo) {
     ctx.fillText(ParametrosRetangulo.texto, textX, textY);
 }
 
-
-//var Personagens = function (x, y, vidas, nivel)
 var Personagens = function (x, y) {
     this.sprite = "sprite";
     this.x = x;
     this.y = y;
-    this.vidas = 3;
 }
 
 Personagens.prototype.render = function () {
-
-  if(this.vidas === 0){
-    this.estado.finalJogo = true;
-    this.sprite = "";
-  } else{
-      ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
-    }
-  };
+  ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
+};
 
 Personagens.prototype.update = function () { };
 
@@ -160,7 +150,6 @@ Jogo.prototype.render = function () {
       this.estado.finalJogo = true,
       this.morrer();
     }
-
 }
 
 Jogo.prototype.morrer = function () {
@@ -243,7 +232,6 @@ Jogo.prototype.handleInput = function (key) {
             if (this.deslocamentoRetanguloSelecionarPersonagem > 6 && this.estado.inicioJogo ===  true) {
                 deslocamentoRetanguloInicial--;
                 this.deslocamentoRetanguloSelecionarPersonagem = (deslocarRetangulo * deslocamentoRetanguloInicial) + 6;
-                console.log(this.deslocamentoRetanguloSelecionarPersonagem)
             }
 
             break;
@@ -253,7 +241,6 @@ Jogo.prototype.handleInput = function (key) {
             if (this.deslocamentoRetanguloSelecionarPersonagem < 400 && this.estado.inicioJogo ===  true) {
                 deslocamentoRetanguloInicial++;
                 this.deslocamentoRetanguloSelecionarPersonagem = (deslocarRetangulo * deslocamentoRetanguloInicial) + 6;
-                console.log(this.deslocamentoRetanguloSelecionarPersonagem)
             }
 
             break;
@@ -286,6 +273,7 @@ var Enemy = function (x, y, speed) {
     this.x = x;
     this.y = y;
     this.sprite = "images/enemy-bug.png";
+    this.vidas = 3;
     this.estado = {
       finalJogo: false,
     }
@@ -301,6 +289,32 @@ Enemy.prototype.update = function (dt) {
     }
 };
 
+Enemy.prototype.render = function () {
+    if(this.vidas === 0){
+      this.estado.finalJogo = true;
+      this.sprite = "";
+    }
+    if(this.estado.finalJogo === false){
+      ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+    }
+}
+
+Enemy.prototype.handleInput = function(key){
+  switch (key) {
+        case "enter":
+            if (this.estado.finalJogo === true) {
+              allEnemies.forEach(function(enemy){
+                enemy.sprite = "images/enemy-bug.png";
+                enemy.speed = numeroAleatorio(5, 1);
+                enemy.x = 1;
+                enemy.vidas = 3;
+                enemy.estado.finalJogo = false;
+              });
+            }
+        break;
+  }
+}
+
 var Player = function (x, y, vidas, nivel) {
     Personagens.call(this);
     this.sprite = sprite;
@@ -311,7 +325,6 @@ var Player = function (x, y, vidas, nivel) {
     this.estado = {
       inicioJogo: true,
       finalJogo: false,
-      // selecaoJogador: true,
     }
 };
 
@@ -324,12 +337,12 @@ Player.prototype.render = function () {
       this.selecionarPlayer();
   }
 
-  else if(this.vidas === 0){
+   if(this.vidas === 0){
     this.estado.finalJogo = true;
     this.sprite = "";
   }
 
-  else{
+  if(this.estado.inicioJogo === false && this.estado.finalJogo === false){
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
   }
 };
@@ -339,7 +352,6 @@ Player.prototype.selecionarPlayer = function () {
     for (var i = 0; i < players.length; ++i) {
         players[i].posicaoJogador = (100 * i) + 6;
         ctx.drawImage(Resources.get(players[i].sprite), players[i].posicaoJogador, 200, (players[i].largura) * 1.3, 100 * 1.5);
-        // console.log(players[i].posicaoJogador);
     }
 };
 
@@ -412,6 +424,8 @@ var Vida = function (x, y, speed) {
     this.estado = {
       finalJogo: false,
     }
+    this.vidas = 3;
+
 }
 
 Vida.prototype = new Personagens();
@@ -434,16 +448,27 @@ Vida.prototype.render = function () {
       this.estado.finalJogo = true;
       this.sprite = "";
     }
-    else{
+    if(this.estado.finalJogo === false){
       ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
     }
 }
 
-// Vida.prototype.morrer = function () {
-//     vida.y = numeroAleatorio(3, 1);
-//     vida.speed = numeroAleatorio(10, 5);
-// }
-
+Vida.prototype.handleInput = function(key){
+  switch (key) {
+        case "enter":
+            if (this.estado.finalJogo === true) {
+              premiacaoVidas.forEach(function(vida){
+                vida.sprite = "images/Heart.png";
+                vida.speed = numeroAleatorio(10, 5);
+                vida.y = numeroAleatorio(3, 1);
+                vida.x = 1;
+                vida.vidas = 3;
+                vida.estado.finalJogo = false;
+              });
+            }
+        break;
+  }
+}
 
 var allEnemies = [];
 for (var i = 1; i < 4; ++i) {
@@ -477,5 +502,14 @@ document.addEventListener("keyup", function (e) {
     };
 
     ambienteJogo.handleInput(allowedKeys[e.keyCode]);
+
     playerEscolhido.handleInput(allowedKeys[e.keyCode]);
+
+    for(var i = 0; i < premiacaoVidas.length; i++){
+      vida.handleInput(allowedKeys[e.keyCode]);
+    }
+
+    for(var i = 0; i < allEnemies.length; i++){
+      enemy.handleInput(allowedKeys[e.keyCode]);
+    }
 });

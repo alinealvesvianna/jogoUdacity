@@ -90,17 +90,25 @@ var Engine = (function(global) {
                 playerEscolhido.y = 5;
                 playerEscolhido.vidas--;
                 ambienteJogo.vidas--;
-                vida.vidas--;
-                enemy.vidas--;
+
+                for(var i = 0; i < premiacaoVidas.length; i++){
+                  premiacaoVidas[i].vidas--;
+                }
 
                 if (playerEscolhido.nivel > 1) {
                     playerEscolhido.nivel--;
                     ambienteJogo.nivel--;
                 }
 
-                if (enemy.speed > 1){
-                  enemy.speed -= 1;
+                for(var i = 0; i < allEnemies.length ; i++ ){
+                  if (allEnemies[i].speed > 1){
+                    allEnemies[i].speed--;
+                  }
+                  if(allEnemies[i].vidas >= 0){
+                    allEnemies[i].vidas--;
+                  }
                 }
+
             }
         });
 
@@ -108,9 +116,14 @@ var Engine = (function(global) {
           if ((Math.round(vida.x) === playerEscolhido.x) && (vida.y === playerEscolhido.y)) {
               playerEscolhido.vidas++;
               ambienteJogo.vidas++;
-              vida.vidas++;
-              enemy.vidas++;
 
+              for(var i = 0; i < premiacaoVidas.length; i++){
+                premiacaoVidas[i].vidas++;
+              }
+
+              for(var i = 0; i < allEnemies.length; i++){
+                allEnemies[i].vidas++;
+              }
 
               vida.x = numeroAleatorio(-40, -10)
               console.log("ganhei uma vida!!")
