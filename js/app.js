@@ -12,24 +12,6 @@
  *  @description: Variáveis globais
  */
 /**
- * Variável utilizada para saber se o jogador morreu, e exibir
- * a tela de game over.
- */
-// var morreu = false;
-
-/**
- * Variável utilizada para saber se o jogo iniciou, para
- * fazer a escolha do personagem.
- */
-// var inicioJogo = true;
-
-/**
- * Variáveis utilizadas deslocar o retângulo usado para selecionar
- * o jogador ao início do jogo.
- */
-
-
-/**
  * Array de objetos com propriedades para selecionar o jogador.
  */
 var players = [{
@@ -65,13 +47,31 @@ var players = [{
  */
 var sprite = "";
 
+/**
+ * Variáveis utilizadas para deslocar o retângulo que seleciona
+ * o jogador no início do jogo.
+ */
 var deslocamentoRetanguloInicial = 0;
 var deslocarRetangulo = 100;
 
+/**
+ * @description:  Essa função gera números aleatórios para parâmetros do jogo.
+ *
+ * @param {number} max - o maior número aleatório que pode ser retornado
+ * @param {number} min - o menor número aleatório que pode ser retornado
+ * @returns {number} - Retorna um número aleatório entre o parâmetro min e max
+ *
+ */
 function numeroAleatorio(max, min) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * @description:  Essa função cria retângulos com texto, e centraliza
+ *                o conteúdo em relação a sua a altura e largura.
+ *
+ * @param ParametrosRetangulo {object} - Define os parâmetros para desenhar o retângulo
+ */
 function desenharRetangulo(ParametrosRetangulo) {
     var retanguloLineWidth = 6;
 
@@ -95,28 +95,66 @@ function desenharRetangulo(ParametrosRetangulo) {
     ctx.fillText(ParametrosRetangulo.texto, textX, textY);
 }
 
-var Personagens = function (x, y) {
+/**
+ * @description: Super classe, que abstrai as classes do jogo,
+ *               Vidas, Enemy e Player.
+ * @constructor
+ * @param x {number} - Define a posição x do personagem
+ * @param y {number} - Define a posição y do personagem
+ */
+var Personagens = function(x, y) {
     this.sprite = "sprite";
     this.x = x;
     this.y = y;
 }
 
-Personagens.prototype.render = function () {
-  ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
+/**
+ * @description: Metódo da Super classe Personagem, que renderiza
+ *               os personagens na tela
+ * @constructor
+ */
+Personagens.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
 };
 
-Personagens.prototype.update = function () { };
+/**
+ * @description: Metódo da Super classe Personagem, que atualiza
+ *               os personagens na tela
+ * @constructor
+ */
+Personagens.prototype.update = function() {};
 
-var Jogo = function (estado, vidas, nivel, deslocamentoRetanguloSelecionarPersonagem) {
+
+/**
+ * @description: Classe Jogo, criada para guardar os estados do jogo
+ * @constructor
+ * @param estado {object} - Define o estado
+ * @param vidas {number} - Define a quantidades de vidas
+ * @param nivel {number} - Define o nível
+ * @param deslocamentoRetanguloSelecionarPersonagem {number} - Define a posição do retângulo
+ *        para seleção do player
+ */
+var Jogo = function(estado, vidas, nivel, deslocamentoRetanguloSelecionarPersonagem) {
     this.estado = estado;
     this.vidas = vidas;
     this.nivel = nivel;
     this.deslocamentoRetanguloSelecionarPersonagem = deslocamentoRetanguloSelecionarPersonagem;
 };
 
-Jogo.prototype.update = function () { };
 
-Jogo.prototype.render = function () {
+/**
+ * @description: Metódo da Classe Jogo, que atualiza
+ *               os estados do jogo
+ * @constructor
+ */
+Jogo.prototype.update = function() {};
+
+/**
+ * @description: Metódo da Classe Jogo, que renderiza
+ *               os estados do jogo
+ * @constructor
+ */
+Jogo.prototype.render = function() {
     ctx.font = "20px Trebuchet MS";
     ctx.fillStyle = "white"
 
@@ -146,43 +184,53 @@ Jogo.prototype.render = function () {
         this.selecionarPlayer();
     }
 
-    if(this.vidas === 0){
-      this.estado.finalJogo = true,
-      this.morrer();
+    if (this.vidas === 0) {
+        this.estado.finalJogo = true,
+            this.morrer();
     }
 }
 
-Jogo.prototype.morrer = function () {
-       desenharRetangulo({
-           x: 102,
-           y: 150,
-           w: 300,
-           h: 70,
-           texto: "Você Perdeu, seu ruim!",
-           transparencia: 0.6,
-           corRetangulo: "Tomato",
-           bordaRetanguloCor: "Salmon",
-           corFonte: "White",
-           tamanhoFonte: 20,
-       });
+/**
+ * @description: Metódo da Classe Jogo, que mostra mensagem
+ *               de game over
+ * @constructor
+ */
+Jogo.prototype.morrer = function() {
+    desenharRetangulo({
+        x: 102,
+        y: 150,
+        w: 300,
+        h: 70,
+        texto: "Você Perdeu, seu ruim!",
+        transparencia: 0.6,
+        corRetangulo: "Tomato",
+        bordaRetanguloCor: "Salmon",
+        corFonte: "White",
+        tamanhoFonte: 20,
+    });
 
-       desenharRetangulo({
-           x: 7,
-           y: 300,
-           w: 490,
-           h: 50,
-           texto: "Pressione a barra de espaço para começar novamente",
-           transparencia: 0.6,
-           corRetangulo: "GoldenRod",
-           bordaRetanguloCor: "Gold",
-           corFonte: "White",
-           tamanhoFonte: 16,
-       })
+    desenharRetangulo({
+        x: 7,
+        y: 300,
+        w: 490,
+        h: 50,
+        texto: "Pressione a barra de espaço para começar novamente",
+        transparencia: 0.6,
+        corRetangulo: "GoldenRod",
+        bordaRetanguloCor: "Gold",
+        corFonte: "White",
+        tamanhoFonte: 16,
+    })
 }
 
-Jogo.prototype.selecionarPlayer = function () {
+/**
+ * @description: Metódo da Classe Jogo, que mostra
+ *               retângulo para escolher jogador
+ * @constructor
+ */
+Jogo.prototype.selecionarPlayer = function() {
 
-  desenharRetangulo({
+    desenharRetangulo({
         x: 40,
         y: 380,
         w: 420,
@@ -223,13 +271,19 @@ Jogo.prototype.selecionarPlayer = function () {
 
 }
 
-Jogo.prototype.handleInput = function (key) {
+/**
+ * @description: Metódo da Classe Jogo, que faz
+ *               retângulo de escolha de jogador
+ *               se mover ao usar o teclado.
+ * @constructor
+ */
+Jogo.prototype.handleInput = function(key) {
     var objetoJogo = this;
     switch (key) {
 
         case "left":
 
-            if (this.deslocamentoRetanguloSelecionarPersonagem > 6 && this.estado.inicioJogo ===  true) {
+            if (this.deslocamentoRetanguloSelecionarPersonagem > 6 && this.estado.inicioJogo === true) {
                 deslocamentoRetanguloInicial--;
                 this.deslocamentoRetanguloSelecionarPersonagem = (deslocarRetangulo * deslocamentoRetanguloInicial) + 6;
             }
@@ -238,7 +292,7 @@ Jogo.prototype.handleInput = function (key) {
 
         case "right":
 
-            if (this.deslocamentoRetanguloSelecionarPersonagem < 400 && this.estado.inicioJogo ===  true) {
+            if (this.deslocamentoRetanguloSelecionarPersonagem < 400 && this.estado.inicioJogo === true) {
                 deslocamentoRetanguloInicial++;
                 this.deslocamentoRetanguloSelecionarPersonagem = (deslocarRetangulo * deslocamentoRetanguloInicial) + 6;
             }
@@ -246,28 +300,35 @@ Jogo.prototype.handleInput = function (key) {
             break;
 
         case "enter":
-           if (this.estado.inicioJogo ===  true) {
-               players.forEach(function (player) {
-                   if (objetoJogo.deslocamentoRetanguloSelecionarPersonagem === player.posicaoJogador) {
-                       sprite = player.sprite;
-                   }
-               });
-               this.estado.inicioJogo = false
-           }
-           break;
+            if (this.estado.inicioJogo === true) {
+                players.forEach(function(player) {
+                    if (objetoJogo.deslocamentoRetanguloSelecionarPersonagem === player.posicaoJogador) {
+                        sprite = player.sprite;
+                    }
+                });
+                this.estado.inicioJogo = false
+            }
+            break;
 
-     case "spacebar":
-         if (this.estado.finalJogo === true) {
-             this.vidas = 3;
-             this.nivel = 1;
-             this.estado.inicioJogo = true;
-             this.estado.finalJogo = false;
-         }
-     break;
+        case "spacebar":
+            if (this.estado.finalJogo === true) {
+                this.vidas = 3;
+                this.nivel = 1;
+                this.estado.inicioJogo = true;
+                this.estado.finalJogo = false;
+            }
+            break;
     }
 };
 
-var Enemy = function (x, y, speed) {
+/**
+ * @description: Classe Enemy, gera os inimigos
+ * @constructor
+ * @param x {number} - Define x
+ * @param y {number} - Define y
+ * @param speed {number} - Define a velocidade
+ */
+var Enemy = function(x, y, speed) {
     Personagens.call(this);
     this.speed = speed;
     this.x = x;
@@ -275,47 +336,71 @@ var Enemy = function (x, y, speed) {
     this.sprite = "images/enemy-bug.png";
     this.vidas = 3;
     this.estado = {
-      finalJogo: false,
+        finalJogo: false,
     }
 };
 
 Enemy.prototype = new Personagens();
 Enemy.prototype.constructor = Enemy;
 
-Enemy.prototype.update = function (dt) {
+/**
+ * @description: Metódo da Classe Enemy,
+ *               que atualiza inimigos na tela
+ * @constructor
+ */
+Enemy.prototype.update = function(dt) {
     this.x += this.speed * dt;
     if (this.x > 6) {
         this.x = -1;
     }
 };
 
-Enemy.prototype.render = function () {
-    if(this.vidas === 0){
-      this.estado.finalJogo = true;
-      this.sprite = "";
+/**
+ * @description: Metódo da Classe Enemy,
+ *               que renderiza inimigos na tela
+ * @constructor
+ */
+Enemy.prototype.render = function() {
+    if (this.vidas === 0) {
+        this.estado.finalJogo = true;
+        this.sprite = "";
     }
-    if(this.estado.finalJogo === false){
-      ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+    if (this.estado.finalJogo === false) {
+        ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
     }
 }
 
-Enemy.prototype.handleInput = function(key){
-  switch (key) {
+/**
+ * @description: Metódo da Classe Enemy,
+ *               que muda as propriedades
+ *               dos inimigos ao usar o teclado
+ * @constructor
+ */
+Enemy.prototype.handleInput = function(key) {
+    switch (key) {
         case "enter":
             if (this.estado.finalJogo === true) {
-              allEnemies.forEach(function(enemy){
-                enemy.sprite = "images/enemy-bug.png";
-                enemy.speed = numeroAleatorio(5, 1);
-                enemy.x = 1;
-                enemy.vidas = 3;
-                enemy.estado.finalJogo = false;
-              });
+                allEnemies.forEach(function(enemy) {
+                    enemy.sprite = "images/enemy-bug.png";
+                    enemy.speed = numeroAleatorio(5, 1);
+                    enemy.x = 1;
+                    enemy.vidas = 3;
+                    enemy.estado.finalJogo = false;
+                });
             }
-        break;
-  }
+            break;
+    }
 }
 
-var Player = function (x, y, vidas, nivel) {
+/**
+ * @description: Classe Player, gera o jogador
+ * @constructor
+ * @param x {number} - Define x
+ * @param y {number} - Define y
+ * @param vidas {number} - Define vidas
+ * @param nivel {number} - Define nível
+ */
+var Player = function(x, y, vidas, nivel) {
     Personagens.call(this);
     this.sprite = sprite;
     this.x = x;
@@ -323,58 +408,76 @@ var Player = function (x, y, vidas, nivel) {
     this.vidas = vidas;
     this.nivel = nivel;
     this.estado = {
-      inicioJogo: true,
-      finalJogo: false,
+        inicioJogo: true,
+        finalJogo: false,
     }
 };
 
 Player.prototype = new Personagens();
 Player.prototype.constructor = Player;
 
+/**
+ * @description: Metódo da Classe Player,
+ *               que renderiza o jogador
+ *               na tela
+ * @constructor
+ */
+Player.prototype.render = function() {
+    if (this.estado.inicioJogo === true) {
+        this.selecionarPlayer();
+    }
 
-Player.prototype.render = function () {
-  if(this.estado.inicioJogo === true){
-      this.selecionarPlayer();
-  }
+    if (this.vidas === 0) {
+        this.estado.finalJogo = true;
+        this.sprite = "";
+    }
 
-   if(this.vidas === 0){
-    this.estado.finalJogo = true;
-    this.sprite = "";
-  }
-
-  if(this.estado.inicioJogo === false && this.estado.finalJogo === false){
-    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
-  }
+    if (this.estado.inicioJogo === false && this.estado.finalJogo === false) {
+        ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 30);
+    }
 };
 
-
-Player.prototype.selecionarPlayer = function () {
+/**
+ * @description: Metódo da Classe Player,
+ *               que exibe todas as opções
+ *               de personagens na tela
+ * @constructor
+ */
+Player.prototype.selecionarPlayer = function() {
     for (var i = 0; i < players.length; ++i) {
         players[i].posicaoJogador = (100 * i) + 6;
         ctx.drawImage(Resources.get(players[i].sprite), players[i].posicaoJogador, 200, (players[i].largura) * 1.3, 100 * 1.5);
     }
 };
 
-Player.prototype.handleInput = function (key) {
+/**
+ * @description: Metódo da Classe Player,
+ *               que movimenta o jogador na tela
+ *               ao acionar o teclado
+ * @constructor
+ */
+Player.prototype.handleInput = function(key) {
 
     switch (key) {
         case "left":
-            if (this.x > 0 && this.estado.inicioJogo === false) {
+            if (this.x > 0 && this.estado.inicioJogo === false && this.estado.finalJogo === false) {
                 this.x--;
             }
             break;
 
         case "up":
-            if (this.y > 0) {
+            if (this.y >= 0 && this.estado.inicioJogo === false && this.estado.finalJogo === false) {
                 this.y--;
             }
 
-            else {
+            if (this.y <= -1 && this.estado.inicioJogo === false && this.estado.finalJogo === false) {
+                console.log(this.y);
+
                 ctx.clearRect(0, 0, 500, 600);
                 this.nivel++;
                 this.y = 5;
 
-                allEnemies.forEach(function (enemy) {
+                allEnemies.forEach(function(enemy) {
                     enemy.speed += 1;
                 });
                 ambienteJogo.nivel++;
@@ -383,46 +486,53 @@ Player.prototype.handleInput = function (key) {
 
         case "right":
 
-            if (this.x < 4 && this.estado.inicioJogo === false) {
+            if (this.x < 4 && this.estado.inicioJogo === false && this.estado.finalJogo === false) {
                 this.x++;
             }
 
             break;
 
         case "down":
-            if (this.y < 5) {
+            if (this.y < 5 && this.estado.inicioJogo === false && this.estado.finalJogo === false) {
                 this.y++;
             }
             break;
 
         case "enter":
-          if(this.estado.inicioJogo ===  true){
-              this.sprite = sprite;
-              this.estado.inicioJogo = false
-          }
-          break;
+            if (this.estado.inicioJogo === true) {
+                this.sprite = sprite;
+                this.estado.inicioJogo = false
+            }
+            break;
 
-          case "spacebar":
-              if (this.estado.finalJogo === true) {
-                  this.vidas = 3;
-                  this.nivel = 1;
-                  this.estado.inicioJogo = true;
-                  this.estado.finalJogo = false;
-              }
-          break;
+        case "spacebar":
+            if (this.estado.finalJogo === true) {
+                this.vidas = 3;
+                this.nivel = 1;
+                this.estado.inicioJogo = true;
+                this.estado.finalJogo = false;
+            }
+            break;
     }
 
 };
 
-
-var Vida = function (x, y, speed) {
+/**
+ * @description: Classe Vida que instância os corações no jogo,
+ *                e faz o jogador ganhar vidas ao pegá-lo
+ * @constructor
+ * @param x {number} - Define x
+ * @param y {number} - Define y
+ * @param speed {number} - Define a velocidade
+ */
+var Vida = function(x, y, speed) {
     Personagens.call(this);
     this.speed = speed;
     this.x = x;
     this.y = y;
     this.sprite = "images/Heart.png";
     this.estado = {
-      finalJogo: false,
+        finalJogo: false,
     }
     this.vidas = 3;
 
@@ -432,7 +542,12 @@ Vida.prototype = new Personagens();
 Vida.prototype.constructor = Vida;
 
 
-Vida.prototype.update = function (dt) {
+/**
+ * @description: Metódo da Classe Vida,
+ *               que atualiza os corações na tela
+ * @constructor
+ */
+Vida.prototype.update = function(dt) {
     this.x += this.speed * dt;
     if (this.x > 30) {
         this.x = -1;
@@ -443,31 +558,42 @@ Vida.prototype.update = function (dt) {
     }
 }
 
-Vida.prototype.render = function () {
-    if(this.vidas === 0){
-      this.estado.finalJogo = true;
-      this.sprite = "";
+/**
+ * @description: Metódo da Classe Vida,
+ *               que atualiza os corações na tela
+ * @constructor
+ */
+Vida.prototype.render = function() {
+    if (this.vidas === 0) {
+        this.estado.finalJogo = true;
+        this.sprite = "";
     }
-    if(this.estado.finalJogo === false){
-      ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
+    if (this.estado.finalJogo === false) {
+        ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 10);
     }
 }
 
-Vida.prototype.handleInput = function(key){
-  switch (key) {
+/**
+ * @description: Metódo da Classe Vida,
+ *               que muda os parâmetros do coração
+ *               ao acionar o teclado
+ * @constructor
+ */
+Vida.prototype.handleInput = function(key) {
+    switch (key) {
         case "enter":
             if (this.estado.finalJogo === true) {
-              premiacaoVidas.forEach(function(vida){
-                vida.sprite = "images/Heart.png";
-                vida.speed = numeroAleatorio(10, 5);
-                vida.y = numeroAleatorio(3, 1);
-                vida.x = 1;
-                vida.vidas = 3;
-                vida.estado.finalJogo = false;
-              });
+                premiacaoVidas.forEach(function(vida) {
+                    vida.sprite = "images/Heart.png";
+                    vida.speed = numeroAleatorio(10, 5);
+                    vida.y = numeroAleatorio(3, 1);
+                    vida.x = 1;
+                    vida.vidas = 3;
+                    vida.estado.finalJogo = false;
+                });
             }
-        break;
-  }
+            break;
+    }
 }
 
 var allEnemies = [];
@@ -491,7 +617,7 @@ var ambienteJogo = new Jogo({
     // selecaoJogador: true,
 }, 3, 1, 6)
 
-document.addEventListener("keyup", function (e) {
+document.addEventListener("keyup", function(e) {
     var allowedKeys = {
         37: "left",
         38: "up",
@@ -505,11 +631,11 @@ document.addEventListener("keyup", function (e) {
 
     playerEscolhido.handleInput(allowedKeys[e.keyCode]);
 
-    for(var i = 0; i < premiacaoVidas.length; i++){
-      vida.handleInput(allowedKeys[e.keyCode]);
+    for (var i = 0; i < premiacaoVidas.length; i++) {
+        vida.handleInput(allowedKeys[e.keyCode]);
     }
 
-    for(var i = 0; i < allEnemies.length; i++){
-      enemy.handleInput(allowedKeys[e.keyCode]);
+    for (var i = 0; i < allEnemies.length; i++) {
+        enemy.handleInput(allowedKeys[e.keyCode]);
     }
 });
