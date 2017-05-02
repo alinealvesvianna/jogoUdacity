@@ -1,5 +1,5 @@
 # frontend-nanodegree-arcade-game
-===============================
+
 
 ## Instruções para rodar o projeto
 
