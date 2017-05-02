@@ -1,9 +1,11 @@
-frontend-nanodegree-arcade-game
+#frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission.
+##Instruções para rodar o projeto
+----------------------
+1. Clone ou faça download desse repositório. O jogo també pode ser acessado neste [link]()
 
-Instruções para o jogo
+##Instruções para o jogo
 ----------------------
 1. Escolha o personagem de sua preferência, e **pressione a tecla Enter** do teclado para iniciar
 o jogo.
