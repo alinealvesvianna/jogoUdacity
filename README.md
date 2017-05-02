@@ -1,5 +1,7 @@
 # frontend-nanodegree-arcade-game
 
+Projeto da Udacity para mostrar conceitos de Orientação ao Objeto. Engine e arte dos personganes fornecidos pela Udacity.
+
 
 ## Instruções para rodar o projeto
 
