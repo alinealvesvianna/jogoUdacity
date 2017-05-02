@@ -329,11 +329,14 @@ Jogo.prototype.handleInput = function(key) {
  * @param speed {number} - Define a velocidade
  */
 var Enemy = function(x, y, speed) {
-    Personagens.call(this, x, y, "images/enemy-bug.png");
+    Personagens.call(this);
     this.speed = speed;
+    this.x = x;
+    this.y = y;
+    this.sprite = "images/enemy-bug.png";
     this.vidas = 3;
     this.estado = {
-        finalJogo: false
+        finalJogo: false,
     }
 };
 
